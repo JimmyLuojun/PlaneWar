@@ -1,0 +1,31 @@
+# /Users/junluo/Desktop/PlaneWar/pyproject.toml
+
+[tool.poetry]
+name = "planewar"
+version = "0.1.0"
+description = "A classic plane shooting game built with Pygame"
+authors = ["Jimmy Luojun <15828061015@163.com>"] # <-- TODO: Update your email address
+license = "MIT"  # <-- Choose a license (e.g., MIT) or remove if unlicensed
+readme = "README.md" # Specifies the readme file
+repository = "https://github.com/JimmyLuojun/PlaneWar" # Link to your repo
+# homepage = "https://github.com/JimmyLuojun/PlaneWar" # Optional: Can be same as repository
+keywords = ["pygame", "game", "shooter", "arcade"] # Optional: Keywords for discovery
+
+[tool.poetry.dependencies]
+python = "^3.10" # Requires Python 3.10 or newer (e.g., 3.10, 3.11, 3.12, but not 4.0)
+# Adjust lower bound (e.g., ^3.9) if you need compatibility with older Python versions.
+pygame = "^2.5.2" # Assuming Poetry added this version or similar.
+                  # Keep the version Poetry installed via `poetry add pygame`.
+
+# --- Optional: Development Dependencies ---
+# These are tools for formatting, linting, testing etc.
+# They are not needed to *run* the game, only for development.
+# To add them, run: poetry add --group dev ruff pytest
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.4"  # Fast linter and formatter (can replace black, flake8, isort)
+# pytest = "^8.1.1" # Optional: A popular testing framework, if you add tests later
+
+# --- Build System Configuration (Usually added automatically by `poetry init`) ---
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

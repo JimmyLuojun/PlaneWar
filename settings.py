@@ -3,19 +3,24 @@ import pygame
 import os
 
 # --- Base Directory ---
-# Assumes the script is run from the PlaneWar directory
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # Gets the directory where settings.py is
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 IMG_DIR = os.path.join(MEDIA_DIR, 'images')
 SND_DIR = os.path.join(MEDIA_DIR, 'sounds')
+FONT_DIR = os.path.join(MEDIA_DIR, 'fonts')
+LEVELS_DIR = os.path.join(BASE_DIR, 'levels') # Added path for levels directory
 
 # --- Screen Dimensions ---
-SCREEN_WIDTH, SCREEN_HEIGHT = 1600, 900
-FPS = 60 # Frames per second
+SCREEN_WIDTH, SCREEN_HEIGHT = 1000, 600
+FPS = 60
 
 # --- File Paths ---
 PLAYER_IMG_PATH = os.path.join(IMG_DIR, "player.png")
 ENEMY1_IMG_PATH = os.path.join(IMG_DIR, "Enemy1.png")
+# *** ADDED Enemy 2, 3, 4 paths ***
+ENEMY2_IMG_PATH = os.path.join(IMG_DIR, "Enemy2.png")
+ENEMY3_IMG_PATH = os.path.join(IMG_DIR, "Enemy3.png")
+ENEMY4_IMG_PATH = os.path.join(IMG_DIR, "Enemy4.png") # Assuming you might use it
 ENEMY_BOSS_IMG_PATH = os.path.join(IMG_DIR, "Enemy_Boss.png")
 POWERUP_DOUBLESHOT_IMG_PATH = os.path.join(IMG_DIR, "powerup_doubleshot.png")
 POWERUP_SHIELD_IMG_PATH = os.path.join(IMG_DIR, "powerup_shield.png")
@@ -24,22 +29,35 @@ POWERUP_BOMB_IMG_PATH = os.path.join(IMG_DIR, "powerup_bomb.png")
 SHOOT_SOUND_PATH = os.path.join(SND_DIR, "shoot.wav")
 ENEMY_EXPLODE_SOUND_PATH = os.path.join(SND_DIR, "explode.wav")
 BOSS_EXPLODE_SOUND_PATH = os.path.join(SND_DIR, "big_explosion.wav")
-POWERUP_PICKUP_SOUND_PATH = os.path.join(SND_DIR, "small_powerup.wav")
+POWERUP_PICKUP_SOUND_PATH = os.path.join(SND_DIR, "small_powerup.wav") # Using small_powerup as likely intended
 WIN_SOUND_PATH = os.path.join(SND_DIR, "win.wav")
 LOSE_SOUND_PATH = os.path.join(SND_DIR, "lose.wav")
 BOSS_INTRO_SOUND_PATH = os.path.join(SND_DIR, "boss_intro.mp3")
 BOSS_HIT_SOUND_PATH = os.path.join(SND_DIR, "boss_hit.mp3")
-BGM_PATH = os.path.join(SND_DIR, "Dynamedion GbR - 危险_SQ.flac") # Corrected path assumption
+Default_BGM_PATH = os.path.join(SND_DIR, "Dynamedion GbR - 危险_SQ.flac") # Default BGM if no level music
 SHIELD_UP_SOUND_PATH = os.path.join(SND_DIR, "shield_up.mp3")
 SHIELD_DOWN_SOUND_PATH = os.path.join(SND_DIR, "shield_down.mp3")
-BOMB_SOUND_PATH = os.path.join(SND_DIR, "bomb_explode.wav")
+BOMB_SOUND_PATH = os.path.join(SND_DIR, "bomb_explode.wav") # Using bomb_explode as likely intended
 BOSS_SHOOT_SOUND_PATH = os.path.join(SND_DIR, "boss_shoot.wav")
+
+# --- Font Settings ---
+UI_FONT_PATH = os.path.join(FONT_DIR, "NotoSansSC-Regular.ttf")
+FONT_SIZE_LARGE = 60
+FONT_SIZE_SCORE = 36
+FONT_SIZE_TITLE = 90
 
 # --- Sprite Dimensions ---
 PLAYER_WIDTH = 55
 PLAYER_HEIGHT = 45
 ENEMY1_WIDTH = 45
 ENEMY1_HEIGHT = 35
+# *** ADDED Enemy 2, 3, 4 dimensions (Adjust as needed) ***
+ENEMY2_WIDTH = 45
+ENEMY2_HEIGHT = 55
+ENEMY3_WIDTH = 60
+ENEMY3_HEIGHT = 35
+ENEMY4_WIDTH = 50 # Example dimension
+ENEMY4_HEIGHT = 50 # Example dimension
 ENEMY_BOSS_WIDTH = 120
 ENEMY_BOSS_HEIGHT = 90
 POWERUP_WIDTH = 40
@@ -49,35 +67,41 @@ BULLET_HEIGHT = 12
 ENEMY_BULLET_WIDTH = 8
 ENEMY_BULLET_HEIGHT = 15
 
-# --- Game Constants ---
-ENEMY_SPAWN_INTERVAL = 45 # Ticks between enemy spawns (lower is faster)
+# --- Game Constants (Defaults / Global) ---
 BULLET_SPEED = 10
-ENEMY_MIN_SPEED_Y = 2
-ENEMY_MAX_SPEED_Y = 5
+# Default enemy values (can be overridden by level data)
+ENEMY_SPAWN_INTERVAL = 60 # Default spawn interval if not specified in level
+ENEMY_MIN_SPEED_Y = 1
+ENEMY_MAX_SPEED_Y = 4
 ENEMY_MIN_SPEED_X = -2
 ENEMY_MAX_SPEED_X = 2
-BOSS_SPAWN_SCORE = 30 # Score required to spawn the boss
-STARTUP_GRACE_PERIOD = 1500 # Milliseconds of invulnerability at start
-PLAYER_SHOOT_DELAY = 150 # Milliseconds between player shots
-POWERUP_SPAWN_INTERVAL = 8000 # Milliseconds between powerup spawns
-POWERUP_DURATION = 5000 # Milliseconds double shot lasts
-SHIELD_DURATION = 7000 # Milliseconds shield lasts
-POWERUP_SPEED_Y = 3
-BOMB_KEY = pygame.K_b # Key to press for using a bomb
-ENEMY_BULLET_SPEED_Y = 6
-BOSS_ENTRY_Y = 100 # Y-coordinate the boss stops descending at
+MAX_ONSCREEN_ENEMIES = 15 # Default max enemies if not specified in level
+
+# Boss defaults (can be overridden by level data for the boss level)
+BOSS_SPAWN_SCORE = 99999 # Effectively disable score-based boss spawn if using level system
+BOSS_ENTRY_Y = 100
 BOSS_SPEED_X = 3
-BOSS_SHOOT_DELAY = 1500 # Milliseconds between boss shots
+BOSS_SHOOT_DELAY = 1500
 BOSS_MAX_HEALTH = 50
+ENEMY_BULLET_SPEED_Y = 6
+
+# Player / Powerup defaults
+STARTUP_GRACE_PERIOD = 1500
+PLAYER_SHOOT_DELAY = 150
+POWERUP_SPAWN_INTERVAL = 8000 # Default powerup interval
+POWERUP_DURATION = 5000
+SHIELD_DURATION = 7000
+POWERUP_SPEED_Y = 3
+BOMB_KEY = pygame.K_b
 
 # --- PowerUp Types ---
 POWERUP_TYPES = ['double_shot', 'shield', 'bomb']
-POWERUP_IMAGES = { # Associate types with paths for easier loading
+POWERUP_IMAGES = {
     'double_shot': POWERUP_DOUBLESHOT_IMG_PATH,
     'shield': POWERUP_SHIELD_IMG_PATH,
     'bomb': POWERUP_BOMB_IMG_PATH
 }
-POWERUP_FALLBACK_COLORS = { # Fallback colors if images fail
+POWERUP_FALLBACK_COLORS = {
     'double_shot': (0, 0, 255), # BLUE
     'shield': (0, 255, 255), # CYAN
     'bomb': (255, 165, 0) # ORANGE
@@ -96,11 +120,6 @@ ORANGE = (255, 165, 0)
 ENEMY_BULLET_COLOR = RED
 SHIELD_VISUAL_COLOR = (*CYAN, 100) # Tuple unpacking to add alpha
 
-# --- Font Sizes ---
-FONT_SIZE_LARGE = 60
-FONT_SIZE_SCORE = 36
-FONT_SIZE_SMALL = 24
-
 # --- Mixer Settings ---
 MIXER_FREQUENCY = 44100
 MIXER_SIZE = -16
@@ -108,7 +127,6 @@ MIXER_CHANNELS = 2
 MIXER_BUFFER = 512
 
 # --- Sound Volumes ---
-# (Values from 0.0 to 1.0)
 PLAYER_SHOOT_VOLUME = 0.25
 ENEMY_EXPLODE_VOLUME = 0.4
 BOSS_EXPLODE_VOLUME = 0.6
@@ -122,3 +140,6 @@ SHIELD_DOWN_VOLUME = 0.5
 BOMB_VOLUME = 0.7
 BOSS_SHOOT_VOLUME = 0.5
 BGM_VOLUME = 0.3
+
+# --- High Score File Path ---
+HIGH_SCORE_FILE_PATH = os.path.join(BASE_DIR, "highscore.txt")
