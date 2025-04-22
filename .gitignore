@@ -1,0 +1,18 @@
+# Python cache files
+__pycache__/
+*.pyc
+
+# OS-specific files (macOS)
+.DS_Store
+
+# Virtual environment folder (if you use one, replace 'venv' with your folder name)
+venv/
+# Example: env/
+# Example: .venv/
+
+# IDE configuration folders (optional)
+.idea/
+.vscode/__pycache__/
+*.pyc
+.DS_Store
+venv/
